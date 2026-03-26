@@ -61,8 +61,36 @@ function readFileAsDataURL(file, callback) {
   reader.readAsDataURL(file);
 }
 
+// Theme Toggle Logic
+function setupThemeToggle() {
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (!themeToggleBtn) return;
+    
+    // Check saved theme
+    const savedTheme = localStorage.getItem('kumudu_salu_theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeToggleBtn.innerHTML = `☀️`; // Sun icon for light mode
+    } else {
+        themeToggleBtn.innerHTML = `🌙`; // Moon icon for dark mode
+    }
+    
+    themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('kumudu_salu_theme', 'dark');
+            themeToggleBtn.innerHTML = `☀️`; 
+        } else {
+            localStorage.setItem('kumudu_salu_theme', 'light');
+            themeToggleBtn.innerHTML = `🌙`;
+        }
+    });
+}
+
 // Update UI Logos on page load
 document.addEventListener("DOMContentLoaded", () => {
+  setupThemeToggle();
+  
   const logoElements = document.querySelectorAll(".brand-logo");
   const currentLogo = getLogo();
   
