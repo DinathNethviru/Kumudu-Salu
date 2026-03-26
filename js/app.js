@@ -65,7 +65,14 @@ function readFileAsDataURL(file, callback) {
 document.addEventListener("DOMContentLoaded", () => {
   const logoElements = document.querySelectorAll(".brand-logo");
   const currentLogo = getLogo();
+  
   logoElements.forEach(img => {
-      img.src = currentLogo;
+      // If image fails to load (e.g., broken base64 or file deleted), use local file as fallback
+      img.onerror = function() {
+          if (this.src !== "images/logo.png") {
+              this.src = "images/logo.png";
+          }
+      };
+      img.src = currentLogo || "images/logo.png";
   });
 });
