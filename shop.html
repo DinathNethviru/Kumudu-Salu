@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | Kumudu Salu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+<body class="flex flex-col min-h-screen">
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html">
+                        <img src="" alt="Kumudu Salu Logo" class="brand-logo h-12 w-auto object-contain">
+                    </a>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                    <a href="index.html" class="nav-link text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium tracking-wide">
+                        HOME
+                    </a>
+                    <a href="shop.html" class="nav-link active text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium tracking-wide">
+                        SHOP
+                    </a>
+                    <a href="admin.html" class="nav-link text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium tracking-wide">
+                        ADMIN
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="bg-gray-900 py-16 text-center text-white">
+        <h1 class="text-4xl md:text-5xl font-bold font-serif mb-4">Our Collection</h1>
+        <p class="text-gray-400 max-w-2xl mx-auto px-4">Browse our exquisite selection of fine garments designed for absolute elegance.</p>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        <!-- Filters -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-4 space-y-4 md:space-y-0">
+            <h2 class="text-2xl font-serif text-gray-800" id="category-title">All Products</h2>
+            
+            <div class="flex space-x-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto" id="category-filters">
+                <button class="filter-btn active px-4 py-2 text-sm font-medium rounded-full bg-gray-900 text-white transition whitespace-nowrap" data-category="all">All</button>
+                <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition whitespace-nowrap" data-category="women">Women</button>
+                <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition whitespace-nowrap" data-category="men">Men</button>
+                <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition whitespace-nowrap" data-category="kids">Kids</button>
+            </div>
+        </div>
+
+        <div id="shop-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <!-- Products injected here -->
+        </div>
+    </main>
+
+    <!-- Footer Summary -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <img src="" alt="Kumudu Salu Logo" class="brand-logo h-10 w-auto mx-auto mb-4 bg-white p-2 rounded">
+            <p class="text-gray-500 text-sm">&copy; 2026 Kumudu Salu. Designed with elegance in Sri Lanka.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('shop-container');
+            const categoryTitle = document.getElementById('category-title');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            const allProducts = getProducts();
+            
+            function renderProducts(category) {
+                container.innerHTML = '';
+                
+                let filteredProducts = allProducts;
+                if (category !== 'all') {
+                    filteredProducts = allProducts.filter(p => p.category === category);
+                    // Update Title
+                    const catName = category.charAt(0).toUpperCase() + category.slice(1);
+                    categoryTitle.textContent = catName + " Collection";
+                } else {
+                    categoryTitle.textContent = "All Products";
+                }
+
+                if(filteredProducts.length === 0) {
+                    container.innerHTML = `<p class="text-gray-500 col-span-full text-center py-10">No products available in this category.</p>`;
+                    return;
+                }
+
+                filteredProducts.forEach(product => {
+                    const formattedPrice = "Rs. " + product.price.toLocaleString();
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-lg p-4 card-hover shadow-sm border border-gray-100 flex flex-col justify-between';
+                    card.innerHTML = `
+                        <div class="product-img-wrapper rounded bg-gray-50 mb-4 h-64 flex items-center justify-center p-2 relative group cursor-pointer">
+                            <span class="absolute top-2 left-2 bg-[--primary-color] text-white text-xs px-2 py-1 rounded font-medium uppercase tracking-wider z-10 shadow">
+                                ${product.category || 'sale'}
+                            </span>
+                            <img src="${product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain">
+                        </div>
+                        <div class="mt-2 text-center">
+                            <h3 class="text-lg font-medium text-gray-900 font-serif">${product.name}</h3>
+                            <p class="text-[--primary-color] font-semibold mt-1">${formattedPrice}</p>
+                            <button class="mt-4 w-full bg-gray-900 hover:bg-[--primary-color] text-white py-2 rounded transition font-medium text-sm tracking-wide">
+                                Add to Cart
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            // Initial Render
+            renderProducts('all');
+
+            // Category Filter Click Logic
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Reset all button styles
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-gray-900', 'text-white', 'active');
+                        b.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+                    });
+                    
+                    // Activate clicked button
+                    const target = e.target;
+                    target.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+                    target.classList.add('bg-gray-900', 'text-white', 'active');
+
+                    const selectedCategory = target.getAttribute('data-category');
+                    renderProducts(selectedCategory);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
